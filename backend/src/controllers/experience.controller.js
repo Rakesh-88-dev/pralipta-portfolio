@@ -22,6 +22,12 @@ export const createExperience = async (req, res, next) => {
   try {
     const experience = await createExperienceService(req.body);
 
+    const io = req.app.get("io");
+
+    if (io) {
+      io.emit("portfolio_updated");
+    }
+
     return res.status(201).json({
       success: true,
       message: "Experience created successfully",
@@ -39,6 +45,12 @@ export const updateExperience = async (req, res, next) => {
       req.body
     );
 
+    const io = req.app.get("io");
+
+    if (io) {
+      io.emit("portfolio_updated");
+    }
+
     return res.status(200).json({
       success: true,
       message: "Experience updated successfully",
@@ -52,6 +64,12 @@ export const updateExperience = async (req, res, next) => {
 export const deleteExperience = async (req, res, next) => {
   try {
     await deleteExperienceService(req.params.id);
+
+    const io = req.app.get("io");
+
+    if (io) {
+      io.emit("portfolio_updated");
+    }
 
     return res.status(200).json({
       success: true,

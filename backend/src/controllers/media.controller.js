@@ -32,6 +32,48 @@ export const getMediaItem = async (req, res, next) => {
   }
 };
 
+export const downloadMedia = async (req, res, next) => {
+  try {
+    const media = await getMediaByIdService(req.params.id);
+
+    if (!media) {
+      return res.status(404).json({
+        success: false,
+        message: "Media not found",
+      });
+    }
+
+    if (media.mimeType !== "application/pdf") {
+      return res.status(400).json({
+        success: false,
+        message: "This file is not a PDF",
+      });
+    }
+
+    const response = await fetch(media.url);
+
+    if (!response.ok) {
+      return res.status(502).json({
+        success: false,
+        message: "Unable to retrieve PDF file",
+      });
+    }
+
+    const pdfBuffer = Buffer.from(await response.arrayBuffer());
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      'attachment; filename="Pralipta-Panda-Resume.pdf"'
+    );
+    res.setHeader("Content-Length", pdfBuffer.length);
+
+    return res.status(200).send(pdfBuffer);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const uploadMedia = async (req, res, next) => {
   try {
     if (!req.file) {

@@ -1,10 +1,22 @@
 import {
-  ExternalLink,
-  GitBranch,
   Mail,
   MapPin,
   Phone,
 } from "lucide-react";
+
+function LinkedInIcon({ size = 16 }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path d="M20.45 20.45h-3.56v-5.58c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.68H9.35V8.99h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.3ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM3.56 20.45h3.56V8.99H3.56v11.46Z" />
+    </svg>
+  );
+}
 
 function ContactInfo({ profile, settings }) {
   const email = profile?.email || settings?.contactEmail || "";
@@ -13,9 +25,6 @@ function ContactInfo({ profile, settings }) {
 
   const linkedin =
     profile?.linkedinUrl || settings?.socialLinks?.linkedin || "";
-
-  const github =
-    profile?.githubUrl || settings?.socialLinks?.github || "";
 
   const contactItems = [
     email && {
@@ -41,12 +50,7 @@ function ContactInfo({ profile, settings }) {
     linkedin && {
       label: "LinkedIn",
       href: linkedin,
-      icon: ExternalLink,
-    },
-    github && {
-      label: "GitHub",
-      href: github,
-      icon: GitBranch,
+      icon: LinkedInIcon,
     },
   ].filter(Boolean);
 
@@ -131,7 +135,7 @@ function ContactInfo({ profile, settings }) {
                   aria-label={item.label}
                   className="flex h-10 w-10 items-center justify-center border border-white/15 text-white/60 transition-all duration-300 hover:border-white/40 hover:text-white"
                 >
-                  <Icon size={16} strokeWidth={1.4} />
+                  <Icon size={16} />
                 </a>
               );
             })}

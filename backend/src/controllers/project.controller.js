@@ -39,6 +39,12 @@ export const createProject = async (req, res, next) => {
   try {
     const project = await createProjectService(req.body);
 
+    const io = req.app.get("io");
+
+    if (io) {
+      io.emit("portfolio_updated");
+    }
+
     return res.status(201).json({
       success: true,
       message: "Project created successfully",
@@ -56,6 +62,12 @@ export const updateProject = async (req, res, next) => {
       req.body
     );
 
+    const io = req.app.get("io");
+
+    if (io) {
+      io.emit("portfolio_updated");
+    }
+
     return res.status(200).json({
       success: true,
       message: "Project updated successfully",
@@ -69,6 +81,12 @@ export const updateProject = async (req, res, next) => {
 export const deleteProject = async (req, res, next) => {
   try {
     await deleteProjectService(req.params.id);
+
+    const io = req.app.get("io");
+
+    if (io) {
+      io.emit("portfolio_updated");
+    }
 
     return res.status(200).json({
       success: true,

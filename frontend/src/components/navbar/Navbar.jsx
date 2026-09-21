@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ArrowUpRight, X } from "lucide-react";
+
 import { useLenis } from "../../hooks/useLenis";
 
 const menuItems = [
@@ -13,9 +14,22 @@ const menuItems = [
   { number: "08", label: "Contact", target: "#contact" },
 ];
 
-function Navbar() {
+function Navbar({ profile, settings }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const { scrollTo } = useLenis();
+
+  const name = profile?.name || "Pralipta Panda";
+  const title = profile?.title || "MBA | Operations & HR";
+  const logo = settings?.logo || "";
+
+  const initials = name
+    .split(" ")
+    .filter(Boolean)
+    .map((word) => word[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 
   const handleNavigation = (target) => {
     setIsMenuOpen(false);
@@ -37,32 +51,37 @@ function Navbar() {
 
   return (
     <>
-      {/* Main Navbar */}
       <header className="fixed inset-x-0 top-0 z-40">
         <nav className="container-main flex h-20 items-center justify-between sm:h-24">
-          {/* Brand */}
           <button
             type="button"
             onClick={() => handleNavigation("#home")}
             className="group flex min-w-0 items-center gap-3 text-left sm:gap-4"
             aria-label="Go to home"
           >
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-[var(--navy)] bg-[var(--cream)] font-[var(--font-display)] text-base font-medium text-[var(--navy)] transition-all duration-300 group-hover:bg-[var(--navy)] group-hover:text-white sm:h-11 sm:w-11 sm:text-lg">
-              PP
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden border border-[var(--navy)] bg-[var(--cream)] font-[var(--font-display)] text-base font-medium text-[var(--navy)] transition-all duration-300 group-hover:bg-[var(--navy)] group-hover:text-white sm:h-11 sm:w-11 sm:text-lg">
+              {logo ? (
+                <img
+                  src={logo}
+                  alt={`${name} logo`}
+                  className="h-full w-full object-contain"
+                />
+              ) : (
+                initials || "PP"
+              )}
             </span>
 
             <span className="hidden min-w-0 sm:block">
               <span className="block truncate text-sm font-semibold tracking-[-0.01em] text-[var(--text-dark)]">
-                Pralipta Panda
+                {name}
               </span>
 
-              <span className="mt-0.5 block text-[9px] font-medium uppercase tracking-[0.18em] text-[var(--text-muted)]">
-                MBA | Operations & HR
+              <span className="mt-0.5 block truncate text-[9px] font-medium uppercase tracking-[0.18em] text-[var(--text-muted)]">
+                {title}
               </span>
             </span>
           </button>
 
-          {/* Menu Button */}
           <button
             type="button"
             onClick={() => setIsMenuOpen(true)}
@@ -76,14 +95,12 @@ function Navbar() {
 
             <span className="flex h-10 w-10 flex-col items-center justify-center gap-1.5 border border-[var(--border)] bg-[var(--cream)] transition-all duration-300 group-hover:border-[var(--navy)] sm:h-11 sm:w-11">
               <span className="block h-px w-5 bg-[var(--navy)] transition-transform duration-300 group-hover:translate-x-1" />
-
               <span className="mr-2.5 block h-px w-3 self-end bg-[var(--navy)] transition-transform duration-300 group-hover:-translate-x-1 sm:mr-3" />
             </span>
           </button>
         </nav>
       </header>
 
-      {/* Full Screen Menu */}
       <div
         className={`fixed inset-0 z-50 bg-[var(--navy-dark)] text-white transition-all duration-500 ${
           isMenuOpen
@@ -92,24 +109,31 @@ function Navbar() {
         }`}
       >
         <div className="container-main flex min-h-[100dvh] flex-col">
-          {/* Menu Header */}
           <div className="flex h-20 shrink-0 items-center justify-between border-b border-white/10 sm:h-24">
             <button
               type="button"
               onClick={() => handleNavigation("#home")}
               className="flex items-center gap-3 text-left sm:gap-4"
             >
-              <span className="flex h-10 w-10 items-center justify-center border border-white/20 font-[var(--font-display)] text-base font-medium sm:h-11 sm:w-11 sm:text-lg">
-                PP
+              <span className="flex h-10 w-10 items-center justify-center overflow-hidden border border-white/20 font-[var(--font-display)] text-base font-medium sm:h-11 sm:w-11 sm:text-lg">
+                {logo ? (
+                  <img
+                    src={logo}
+                    alt={`${name} logo`}
+                    className="h-full w-full object-contain"
+                  />
+                ) : (
+                  initials || "PP"
+                )}
               </span>
 
               <span className="hidden sm:block">
                 <span className="block text-sm font-semibold">
-                  Pralipta Panda
+                  {name}
                 </span>
 
                 <span className="mt-0.5 block text-[9px] uppercase tracking-[0.18em] text-white/45">
-                  MBA | Operations & HR
+                  {title}
                 </span>
               </span>
             </button>
@@ -128,7 +152,6 @@ function Navbar() {
             </button>
           </div>
 
-          {/* Menu Content */}
           <div className="flex flex-1 flex-col justify-center py-8 sm:py-12">
             <div className="mb-6 flex items-center gap-3 sm:mb-8 sm:gap-4">
               <span className="h-px w-8 bg-white/30 sm:w-10" />
@@ -164,10 +187,9 @@ function Navbar() {
             </div>
           </div>
 
-          {/* Menu Footer */}
           <div className="flex shrink-0 flex-col gap-2 border-t border-white/10 py-5 text-[8px] uppercase tracking-[0.16em] text-white/35 sm:flex-row sm:items-center sm:justify-between sm:py-6 sm:text-[9px] sm:tracking-[0.18em]">
-            <span>Pralipta Panda</span>
-            <span>MBA | Operations & HR</span>
+            <span>{name}</span>
+            <span>{title}</span>
             <span>Portfolio / 2026</span>
           </div>
         </div>

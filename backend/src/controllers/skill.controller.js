@@ -22,6 +22,12 @@ export const createSkill = async (req, res, next) => {
   try {
     const skill = await createSkillService(req.body);
 
+    const io = req.app.get("io");
+
+    if (io) {
+      io.emit("portfolio_updated");
+    }
+
     return res.status(201).json({
       success: true,
       message: "Skill created successfully",
@@ -39,6 +45,12 @@ export const updateSkill = async (req, res, next) => {
       req.body
     );
 
+    const io = req.app.get("io");
+
+    if (io) {
+      io.emit("portfolio_updated");
+    }
+
     return res.status(200).json({
       success: true,
       message: "Skill updated successfully",
@@ -52,6 +64,12 @@ export const updateSkill = async (req, res, next) => {
 export const deleteSkill = async (req, res, next) => {
   try {
     await deleteSkillService(req.params.id);
+
+    const io = req.app.get("io");
+
+    if (io) {
+      io.emit("portfolio_updated");
+    }
 
     return res.status(200).json({
       success: true,

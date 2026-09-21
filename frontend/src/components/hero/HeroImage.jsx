@@ -1,17 +1,28 @@
 import { ArrowUpRight } from "lucide-react";
 
+import { getOptimizedCloudinaryUrl } from "../../utils/cloudinary";
+
 function HeroImage({ profile }) {
   const imageUrl = profile?.profileImage || "";
+
+  const optimizedImageUrl = getOptimizedCloudinaryUrl(imageUrl, {
+    width: 900,
+  });
 
   const name = profile?.name || "Pralipta Panda";
 
   return (
     <div className="relative mt-14 w-full md:mt-0">
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-[var(--accent-light)]">
-        {imageUrl ? (
+        {optimizedImageUrl ? (
           <img
-            src={imageUrl}
+            src={optimizedImageUrl}
             alt={name}
+            width="800"
+            height="1000"
+            fetchPriority="high"
+            decoding="async"
+            loading="eager"
             className="h-full w-full object-cover"
           />
         ) : (

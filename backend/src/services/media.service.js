@@ -1,4 +1,5 @@
 import Media from "../models/Media.js";
+
 import cloudinary from "../config/cloudinary.js";
 
 export const getMedia = async () => {
@@ -9,6 +10,18 @@ export const getMedia = async () => {
 
 export const getMediaById = async (id) => {
   const media = await Media.findById(id);
+
+  if (!media) {
+    const error = new Error("Media not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return media;
+};
+
+export const getMediaByUrl = async (url) => {
+  const media = await Media.findOne({ url });
 
   if (!media) {
     const error = new Error("Media not found");

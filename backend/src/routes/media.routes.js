@@ -3,6 +3,7 @@ import express from "express";
 import {
   getMedia,
   getMediaItem,
+  downloadMedia,
   uploadMedia,
   createMedia,
   updateMedia,
@@ -22,6 +23,12 @@ router.get(
   protect,
   validateObjectId,
   getMediaItem
+);
+
+router.get(
+  "/:id/download",
+  validateObjectId,
+  downloadMedia
 );
 
 router.post(

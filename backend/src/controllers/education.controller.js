@@ -22,6 +22,12 @@ export const createEducation = async (req, res, next) => {
   try {
     const education = await createEducationService(req.body);
 
+    const io = req.app.get("io");
+
+    if (io) {
+      io.emit("portfolio_updated");
+    }
+
     return res.status(201).json({
       success: true,
       message: "Education created successfully",
@@ -39,6 +45,12 @@ export const updateEducation = async (req, res, next) => {
       req.body
     );
 
+    const io = req.app.get("io");
+
+    if (io) {
+      io.emit("portfolio_updated");
+    }
+
     return res.status(200).json({
       success: true,
       message: "Education updated successfully",
@@ -52,6 +64,12 @@ export const updateEducation = async (req, res, next) => {
 export const deleteEducation = async (req, res, next) => {
   try {
     await deleteEducationService(req.params.id);
+
+    const io = req.app.get("io");
+
+    if (io) {
+      io.emit("portfolio_updated");
+    }
 
     return res.status(200).json({
       success: true,

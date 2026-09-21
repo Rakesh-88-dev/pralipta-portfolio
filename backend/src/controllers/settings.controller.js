@@ -21,6 +21,12 @@ export const createSettings = async (req, res, next) => {
   try {
     const settings = await createSettingsService(req.body);
 
+    const io = req.app.get("io");
+
+    if (io) {
+      io.emit("portfolio_updated");
+    }
+
     return res.status(201).json({
       success: true,
       message: "Settings created successfully",
@@ -34,6 +40,12 @@ export const createSettings = async (req, res, next) => {
 export const updateSettings = async (req, res, next) => {
   try {
     const settings = await updateSettingsService(req.body);
+
+    const io = req.app.get("io");
+
+    if (io) {
+      io.emit("portfolio_updated");
+    }
 
     return res.status(200).json({
       success: true,

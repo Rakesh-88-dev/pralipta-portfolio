@@ -18,7 +18,6 @@ function Footer({ profile, settings }) {
 
   const name = profile?.name || "";
   const title = profile?.title || "";
-  const tagline = profile?.tagline || "";
 
   const footerText =
     settings?.footerText ||
@@ -67,7 +66,7 @@ function Footer({ profile, settings }) {
             </button>
 
             <p className="mt-8 max-w-md text-sm leading-6 text-white/45">
-              {tagline || footerText}
+              {footerText}
             </p>
           </div>
 

@@ -38,6 +38,12 @@ export const createCertification = async (req, res, next) => {
     const certification =
       await createCertificationService(req.body);
 
+    const io = req.app.get("io");
+
+    if (io) {
+      io.emit("portfolio_updated");
+    }
+
     return res.status(201).json({
       success: true,
       message: "Certification created successfully",
@@ -56,6 +62,12 @@ export const updateCertification = async (req, res, next) => {
         req.body
       );
 
+    const io = req.app.get("io");
+
+    if (io) {
+      io.emit("portfolio_updated");
+    }
+
     return res.status(200).json({
       success: true,
       message: "Certification updated successfully",
@@ -69,6 +81,12 @@ export const updateCertification = async (req, res, next) => {
 export const deleteCertification = async (req, res, next) => {
   try {
     await deleteCertificationService(req.params.id);
+
+    const io = req.app.get("io");
+
+    if (io) {
+      io.emit("portfolio_updated");
+    }
 
     return res.status(200).json({
       success: true,
