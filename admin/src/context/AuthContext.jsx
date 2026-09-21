@@ -9,7 +9,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const verifyAdmin = async () => {
-      const token = localStorage.getItem("adminToken");
+      const token = sessionStorage.getItem("adminToken");
 
       if (!token) {
         setAdmin(null);
@@ -29,7 +29,7 @@ export function AuthProvider({ children }) {
       } catch (error) {
         console.error("Admin authentication check failed:", error);
 
-        localStorage.removeItem("adminToken");
+        sessionStorage.removeItem("adminToken");
         setAdmin(null);
       } finally {
         setLoading(false);
@@ -55,7 +55,7 @@ export function AuthProvider({ children }) {
       );
     }
 
-    localStorage.setItem("adminToken", receivedToken);
+    sessionStorage.setItem("adminToken", receivedToken);
 
     const authenticatedAdmin =
       data?.admin || data?.user || null;
@@ -66,7 +66,7 @@ export function AuthProvider({ children }) {
   };
 
   const logout = () => {
-    localStorage.removeItem("adminToken");
+    sessionStorage.removeItem("adminToken");
     setAdmin(null);
   };
 
