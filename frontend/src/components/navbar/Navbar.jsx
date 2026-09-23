@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, X } from "lucide-react";
 
 import { useLenis } from "../../hooks/useLenis";
@@ -16,6 +16,10 @@ const menuItems = [
 
 function Navbar({ profile, settings }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showEasterEgg, setShowEasterEgg] = useState(false);
+
+  const logoClickCountRef = useRef(0);
+  const logoClickTimerRef = useRef(null);
 
   const { scrollTo } = useLenis();
 
@@ -41,13 +45,45 @@ function Navbar({ profile, settings }) {
     }, 120);
   };
 
+  const handleLogoClick = () => {
+    logoClickCountRef.current += 1;
+
+    if (logoClickTimerRef.current) {
+      clearTimeout(logoClickTimerRef.current);
+    }
+
+    if (logoClickCountRef.current >= 5) {
+      logoClickCountRef.current = 0;
+      setShowEasterEgg(true);
+      return;
+    }
+
+    logoClickTimerRef.current = setTimeout(() => {
+      logoClickCountRef.current = 0;
+    }, 2000);
+  };
+
+  const closeEasterEgg = () => {
+    setShowEasterEgg(false);
+    logoClickCountRef.current = 0;
+  };
+
   useEffect(() => {
-    document.body.style.overflow = isMenuOpen ? "hidden" : "";
+    document.body.style.overflow =
+      isMenuOpen || showEasterEgg ? "hidden" : "";
 
     return () => {
       document.body.style.overflow = "";
     };
-  }, [isMenuOpen]);
+  }, [isMenuOpen, showEasterEgg]);
+
+  useEffect(() => {
+    return () => {
+      if (logoClickTimerRef.current) {
+        clearTimeout(logoClickTimerRef.current);
+      }
+    };
+  }, []);
 
   return (
     <>
@@ -55,7 +91,10 @@ function Navbar({ profile, settings }) {
         <nav className="container-main flex h-20 items-center justify-between sm:h-24">
           <button
             type="button"
-            onClick={() => handleNavigation("#home")}
+            onClick={() => {
+              handleLogoClick();
+              handleNavigation("#home");
+            }}
             className="group flex min-w-0 items-center gap-3 text-left sm:gap-4"
             aria-label="Go to home"
           >
@@ -101,6 +140,7 @@ function Navbar({ profile, settings }) {
         </nav>
       </header>
 
+      {/* Navigation Menu */}
       <div
         className={`fixed inset-0 z-50 bg-[var(--navy-dark)] text-white transition-all duration-500 ${
           isMenuOpen
@@ -192,6 +232,60 @@ function Navbar({ profile, settings }) {
             <span>{title}</span>
             <span>Portfolio / 2026</span>
           </div>
+        </div>
+      </div>
+
+      {/* Hidden Pralipta Easter Egg */}
+      <div
+        className={`fixed inset-0 z-[60] flex items-center justify-center bg-[var(--navy-dark)] px-6 transition-all duration-700 ${
+          showEasterEgg
+            ? "visible opacity-100"
+            : "pointer-events-none invisible opacity-0"
+        }`}
+        onClick={closeEasterEgg}
+      >
+        <div
+          className={`relative w-full max-w-2xl text-center transition-all duration-700 ${
+            showEasterEgg
+              ? "translate-y-0 scale-100 opacity-100"
+              : "translate-y-6 scale-95 opacity-0"
+          }`}
+          onClick={(event) => event.stopPropagation()}
+        >
+          <span className="mb-8 inline-block text-[10px] font-medium uppercase tracking-[0.3em] text-[var(--accent)]">
+            A little secret
+          </span>
+
+          <div className="mx-auto mb-8 h-px w-12 bg-white/25" />
+
+          <h2 className="font-[var(--font-display)] text-5xl font-medium leading-[0.95] tracking-[-0.05em] text-white sm:text-7xl md:text-8xl">
+            You found
+            <br />
+            something.
+          </h2>
+
+          <p className="mx-auto mt-8 max-w-md text-sm leading-7 text-white/55 sm:text-base">
+            This little corner of the internet was made with intention,
+            creativity, and a little extra love.
+          </p>
+
+          <div className="mt-10 flex items-center justify-center gap-4">
+            <span className="h-px w-8 bg-white/20" />
+            <span className="text-lg text-[var(--accent)]">✦</span>
+            <span className="h-px w-8 bg-white/20" />
+          </div>
+
+          <p className="mt-8 font-[var(--font-display)] text-xl italic text-white/80 sm:text-2xl">
+            Welcome to Pralipta's little corner of the internet.
+          </p>
+
+          <button
+            type="button"
+            onClick={closeEasterEgg}
+            className="mt-12 border border-white/20 px-7 py-3 text-[9px] font-medium uppercase tracking-[0.25em] text-white transition-all duration-300 hover:border-white hover:bg-white hover:text-[var(--navy-dark)]"
+          >
+            Close
+          </button>
         </div>
       </div>
     </>
